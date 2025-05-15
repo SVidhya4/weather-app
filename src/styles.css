@@ -22,6 +22,7 @@ body {
   width: 100%;
   padding: 2em;
   flex-direction: column;
+  margin-bottom: 5rem;
 }
 
 .card {
@@ -140,6 +141,7 @@ input.search-bar {
   font-family: inherit;
   font-size: 105%;
   width: calc(100% - 60px);
+  border: #6f6f6f 0.1px solid;
 }
 
 h1.temp {
@@ -207,9 +209,42 @@ h1.temp {
 }
 
 a {
-  margin-top: 7%;
   color: inherit;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+}
+
+.app-footer {
+  background: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+  border-top: #a0a0a0 0.3px solid;
+  backdrop-filter: blur(10px);
+  color: #ffffff;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.9rem;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.app-footer a {
+  color: #ffffff;
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.spinner-inline {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top: 2px solid #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
