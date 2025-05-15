@@ -1,4 +1,4 @@
-const tomorrowApiKey = "44dTiqaGXDT0ZRxCrhwE5e28jjzrigj5";
+const tomorrowApiKey = "sQJMwdf6avu2gaArFm88FQYWSc58LezQ";
 const openCageApiKey = "c4a2703368534a84b363ef5b5980f169";
 
 
@@ -26,7 +26,7 @@ function getEmoji(code, timeStr) {
 
   const emojiMapNight = {
     1000: "🌕", 1100: "🌖", 1101: "🌗", 1102: "🌑",
-    1001: "☁️", 2000: "🌫️", 4000: "🌦️", 4200: "🌧️",
+    1001: "☁️", 2000: "🌫️", 4000: "🌧️", 4200: "🌧️",
     4201: "🌧️", 5001: "🌨️", 5100: "🌨️", 5101: "❄️",
     6000: "🌧️", 6001: "🌧️", 7000: "🌨️", 7101: "🌨️",
     8000: "⛈️"
@@ -39,6 +39,22 @@ function getEmoji(code, timeStr) {
 
 const weather = {
   fetchWeatherByCoords: function (lat, lon) {
+
+    const cityElem = document.querySelector(".city");
+    const tempElem = document.querySelector(".temp");
+    const descElem = document.querySelector(".description");
+    const humidityElem = document.querySelector(".humidity");
+    const windElem = document.querySelector(".wind");
+    const precipElem = document.querySelector(".precip-value");
+    const forecastElem = document.querySelector(".forecast-list");
+
+    const gridItems = document.querySelectorAll(".right-card .grid .detail-item");
+
+    [cityElem, tempElem, descElem, humidityElem, windElem, precipElem, forecastElem,
+      gridItems[0], gridItems[1], gridItems[2], gridItems[3]
+    ].forEach(showSpinnerIn);
+
+
     document.querySelector(".weather").classList.add("loading");
     Promise.all([
       fetch(`https://api.tomorrow.io/v4/weather/realtime?location=${lat},${lon}&apikey=${tomorrowApiKey}`).then((res) => res.json()),
@@ -97,6 +113,9 @@ const weather = {
     } else if ([8000].includes(weatherCode)) {
       baseName = "thunder";
     }
+    else{
+      baseName = "default";
+    }
 
 
     body.style.backgroundImage = `url('/images/${baseName}-${phase}.jpg')`;
@@ -152,6 +171,7 @@ const weather = {
   },
 
   displayForecast: function (data) {
+    
   const forecastList = document.querySelector(".forecast-list");
   forecastList.innerHTML = ""; // clear old content only
 
@@ -233,7 +253,9 @@ window.addEventListener("load", () => {
         const { latitude, longitude } = position.coords;
         weather.fetchWeatherByCoords(latitude, longitude);
       },
-      () => weather.fetchWeather("Hyderabad")
+      () => {
+        weather.fetchWeather("Hyderabad");
+      }
     );
   } else {
     weather.fetchWeather("Hyderabad");
@@ -244,4 +266,32 @@ window.addEventListener("load", () => {
 document.querySelector(".search button").addEventListener("click", () => weather.search());
 document.querySelector(".search-bar").addEventListener("keyup", (e) => {
   if (e.key === "Enter") weather.search();
+});
+
+function showSpinnerIn(element) {
+  element.dataset.oldText = element.textContent; // save old text
+  element.textContent = '';
+  const spinner = document.createElement('span');
+  spinner.classList.add('spinner-inline');
+  element.appendChild(spinner);
+}
+
+function hideSpinnerIn(element, newText) {
+  element.textContent = newText;
+}
+document.querySelector(".search button").addEventListener("click", function() {
+  const searchButton = this;
+  showSpinnerIn(searchButton);
+  setTimeout(() => {
+    hideSpinnerIn(searchButton, "Search");
+  }, 2000);
+});
+document.querySelector(".search-bar").addEventListener("keyup", function(e) {
+  if (e.key === "Enter") {
+    const searchButton = document.querySelector(".search button");
+    showSpinnerIn(searchButton);
+    setTimeout(() => {
+      hideSpinnerIn(searchButton, "Search");
+    }, 2000);
+  }
 });
